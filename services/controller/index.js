@@ -41,7 +41,22 @@ app.get('/shipping/:cep', (req, res, next) => {
         }
     );
 });
-
+app.get('/product/:id', (req, res, next) => {
+    // Chama método do microserviço.
+    inventory.SearchProductById({id: req.params.id}, (err, product) => {
+        // Se ocorrer algum erro de comunicação
+        // com o microserviço, retorna para o navegador.
+        if (err) {
+            console.error(err);
+            res.status(500).send({ error: 'something failed :(' });
+        } else {
+            // Caso contrário, retorna resultado do
+            // microserviço (um arquivo JSON) com os dados
+            // do produto pesquisado
+            res.json(product);
+        }
+    });
+});
 /**
  * Inicia o router
  */
